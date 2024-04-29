@@ -2,8 +2,8 @@
 from flask import Flask, render_template,request, redirect
 # Conectando a la biblioteca de bases de datos
 from flask_sqlalchemy import SQLAlchemy
-
-
+from Speech import speech
+from game import play_game
 app = Flask(__name__)
 # Conectando SQLite
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///diary.db'
@@ -121,10 +121,20 @@ def form_create():
         return redirect('/index')
     else:
         return render_template('create_card.html')
+    
+@app.route("/voice")
+def voice():
+    try:
+        text = speech()
+        return render_template("create_card.html", text=text)
 
+    except:
+        text = "error"
+        return render_template("create_card.html",text=text)
 
-
-
+@app.route("/voice")
+def game():
+    return render_template("game.html",)
 
 if __name__ == "__main__":
     app.run(debug=True)
